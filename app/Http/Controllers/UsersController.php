@@ -14,7 +14,7 @@ class UsersController extends Controller
 
     public function importExportView()
     {
-        $users = User::all();
+        $users = User::paginate(10)->onEachSide(5);
         return view('import', compact('users'));
     }
 

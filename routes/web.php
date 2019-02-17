@@ -18,3 +18,5 @@ Route::get('/', function () {
 Route::get('export', 'UsersController@export')->name('export');
 Route::get('importExportView', 'UsersController@importExportView');
 Route::post('import', 'UsersController@import')->name('import');
+
+Route::get('pagination', 'PaginationController@index');

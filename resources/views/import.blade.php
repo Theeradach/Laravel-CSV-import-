@@ -45,7 +45,7 @@
             Data
         </div>
         <div class="card-body">
-            <table class="table table-strip">
+            <table class="table table-striped">
                 <thead>
                     <tr>
                         <td>Name</td>
@@ -63,6 +63,7 @@
                 @endforeach
                 </tbody>
             </table>
+            {{ $users->links() }}
         </div>
     </div>
 </div>
