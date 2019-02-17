@@ -25,23 +25,18 @@ class UsersController extends Controller
 
     public function import()
     {
-        //$headings = (new HeadingRowImport)->toArray(request()->file('file'));
-        //dd($headings);
-        try {
-            Excel::import(new UsersImport, request()->file('file'));
-        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
-            $failures = $e->failures();
+        if (request()->hasFile('file')) {
+            try {
+                Excel::import(new UsersImport, request()->file('file'));
+            } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+                $failures = $e->failures();
 
-            return back()->with('failures', $failures);
+                return back()->with('failures', $failures);
 
-            //dd($failures);
-            // foreach ($failures as $failure) {
-            //     $failure->row(); // row that went wrong
-            //     $failure->attribute(); // either heading key (if using heading row concern) or column index
-            //     $failure->errors(); // Actual error messages from Laravel validator
-            // }
+            }
+            return back()->with('success', 'upload successfully!');
         }
-        return back()->with('success', 'upload successfully!');
+
     }
 
 }
