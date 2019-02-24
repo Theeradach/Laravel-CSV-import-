@@ -60,19 +60,19 @@ class UsersController extends Controller
                 $filename
             );
 
-
             // Validate data in csv 
             $csv_errors = $this->validator($filename);
             $errs = $csv_errors[1];
             $err_line = $csv_errors[0];
 
-            if ($err_line) {
+            //dd($csv_errors);
+            if ($errs->any()) {
                 return redirect()->back()
                     ->withErrors($errs, 'import')
                     ->with('error_line', $err_line);
             }
 
-            // Call import job for importing data 
+            logger($filename);
             ImportJob::dispatch($filename);
 
             return redirect()->back()->with(['success' => 'Upload success']);

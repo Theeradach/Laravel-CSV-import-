@@ -22,9 +22,10 @@ class ImportJob implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($filename)
+    public function __construct(string $filename)
     {
         $this->filename = $filename;
+        logger('In construct file name :' . $filename);
     }
 
     /**
@@ -34,10 +35,10 @@ class ImportJob implements ShouldQueue
      */
     public function handle()
     {
-
         logger('get here!!');
 
         $csv = Reader::createFromPath(storage_path('app/public/import/' . $this->filename), 'r');
+        logger($csv);
 
         $csv->setHeaderOffset(0);
 
