@@ -44,7 +44,7 @@ class ImportJob implements ShouldQueue
 
         foreach ($csv as $row) {
 
-            User::create([
+            User::updateOrCreate([
                 'name' => $row['name'],
                 'email' => $row['email'],
                 'password' => $row['password'],

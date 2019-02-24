@@ -73,7 +73,8 @@ class UsersController extends Controller
             }
 
             logger($filename);
-            ImportJob::dispatch($filename);
+            //ImportJob::dispatch($filename);
+            dispatch(new ImportJob($filename));
 
             return redirect()->back()->with(['success' => 'Upload success']);
         }
