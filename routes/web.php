@@ -16,6 +16,7 @@ Route::get('/', function () {
 });
 
 Route::get('export', 'UsersController@export')->name('export');
+Route::get('exportLibrary', 'UsersController@exportLibrary')->name('exportLibrary');
 Route::get('importExportView', 'UsersController@importExportView');
 Route::post('importLibrary', 'UsersController@importLibrary')->name('importLibrary');
 

@@ -12,6 +12,11 @@ use App\Jobs\ImportJob;
 use Illuminate\Http\File;
 use Illuminate\Support\Facades\Storage;
 use Validator;
+use League\Csv\Exception;
+use App\Jobs\ExportJob;
+use League\Csv\Writer;
+use SplTempFileObject;
+
 
 class UsersController extends Controller
 {
@@ -22,7 +27,7 @@ class UsersController extends Controller
         return view('importLibrary', compact('users'));
     }
 
-    public function export()
+    public function exportLibrary()
     {
         return Excel::download(new UsersExport, 'users.xlsx');
     }
@@ -125,5 +130,28 @@ class UsersController extends Controller
             }
             fclose($handle);
         }
+    }
+
+    // very fast 
+    public function export()
+    {
+        //dispatch(new ExportJob());
+
+        $users = User::all();
+
+        // create csv file in mempory
+        $csv = Writer::createFromFileObject(new SplTempFileObject());
+        // insert header 
+        $header = \Schema::getColumnListing('users');
+        //dd($header);
+        $csv->insertOne($header);
+
+        // insert rows 
+        foreach ($users as $user) {
+            $csv->insertOne($user->toArray());
+        }
+
+        // output
+        $csv->output('exportUser.csv');
     }
 }
