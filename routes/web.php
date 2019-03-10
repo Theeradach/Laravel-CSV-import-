@@ -25,6 +25,6 @@ Route::get('viewNoLibrary', 'UsersController@viewNoLibrary')->name('viewNoLibrar
 
 Route::get('pagination', 'PaginationController@index');
 
-
-
-
+// import specific cell in excel
+Route::get('importExcelView', 'UsersController@importExcelView')->name('importExcelView');
+Route::post('importExcel', 'UsersController@importExcel')->name('importExcel');

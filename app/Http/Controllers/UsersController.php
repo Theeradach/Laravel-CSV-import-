@@ -16,6 +16,7 @@ use League\Csv\Exception;
 use App\Jobs\ExportJob;
 use League\Csv\Writer;
 use SplTempFileObject;
+use App\Imports\ExcelImport;
 
 
 class UsersController extends Controller
@@ -152,5 +153,26 @@ class UsersController extends Controller
 
         // output
         $csv->output('exportUser.csv');
+    }
+
+
+    // import excel with specific cell 
+    public function importExcelView()
+    {
+        return view('importExcel');
+    }
+
+    public function importExcel()
+    {
+        if (request()->hasFile('file')) {
+            try {
+                Excel::import(new ExcelImport, request()->file('file'));
+            } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+                $failures = $e->failures();
+
+                return back()->with('failures', $failures);
+            }
+            return back()->with('success', 'upload successfully!');
+        }
     }
 }
