@@ -67,14 +67,11 @@ class UsersController extends Controller
 
             // Validate data in csv 
             $csv_errors = $this->validator($filename);
-            $errs = $csv_errors[1];
-            $err_line = $csv_errors[0];
 
             //dd($csv_errors);
-            if ($errs->any()) {
+            if (!empty($csv_errors)) {
                 return redirect()->back()
-                    ->withErrors($errs, 'import')
-                    ->with('error_line', $err_line);
+                    ->withErrors($csv_errors, 'import');
             }
 
             logger($filename);
@@ -96,7 +93,7 @@ class UsersController extends Controller
     {
         // Line endings fix
         ini_set('auto_detect_line_endings', true);
-
+        $errs = array();
         $line = 0;
         $filePath = storage_path('app/public/import/' . $fileName);
 
@@ -121,13 +118,15 @@ class UsersController extends Controller
                 )->errors();
 
                 //dd($csv_errors);
-                $errs = array();
-                array_push($errs, $line);
-                array_push($errs, $csv_errors);
-                //dd($errs[1]);
-
-                return $errs;
+                if ($csv_errors->any()) {
+                    $errs[] = array(
+                        'line' => $line,
+                        'csv_errors' => $csv_errors
+                    );
+                }
             }
+            dd($errs);
+            return $errs;
             fclose($handle);
         }
     }
