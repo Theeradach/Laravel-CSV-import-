@@ -11,8 +11,12 @@ use Maatwebsite\Excel\Concerns\FromCollection;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Concerns\WithCustomStartCell;
+use Maatwebsite\Excel\Concerns\WithPreCalculateFormulas;
 // Formatting the fonts and sizes
 use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Events\BeforeExport;
+use Maatwebsite\Excel\Events\BeforeWriting;
 use Maatwebsite\Excel\Events\BeforeSheet;
 use Maatwebsite\Excel\Events\AfterSheet;
 
@@ -21,7 +25,8 @@ class UsersExport implements
     WithHeadings,
     WithMapping,
     ShouldAutoSize,
-    WithEvents
+    WithEvents,
+    WithCustomStartCell
 {
 
     public function collection()
@@ -37,7 +42,6 @@ class UsersExport implements
     public function map($users): array
     {
         return [
-            '',
             $users->email,
             $users->name,
         ];
@@ -51,17 +55,24 @@ class UsersExport implements
         ];
     }
 
+    public function startCell(): string
+    {
+        return 'B4';
+    }
+
     /**
      * @return array
      */
     public function registerEvents(): array
     {
         return [
+            BeforeExport::class    => function (BeforeExport $event) { },
+            BeforeWriting::class    => function (BeforeWriting $event) { },
             BeforeSheet::class    => function (BeforeSheet $event) {
                 $arrayData = [
                     ['10:30-11:00'], ['11:00-11:30'], ['11:30-12:00'], ['12:00-12:30']
                 ];
-                $event->sheet->getDelegate()->fromArray($arrayData, NULL, 'A12');
+                $event->sheet->getDelegate()->fromArray($arrayData, NULL, 'A4');
             },
 
             AfterSheet::class    => function (AfterSheet $event) {
@@ -95,6 +106,11 @@ class UsersExport implements
                     );
                 // dd($dataArray);
 
+                // Setting formula 
+                $event->sheet->getDelegate()->setCellValue(
+                    'H10',
+                    '=IF(A3, CONCATENATE(A1, " ", A2), CONCATENATE(A2, " ", A1))'
+                );
             },
         ];
     }
