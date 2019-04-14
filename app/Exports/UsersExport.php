@@ -73,6 +73,14 @@ class UsersExport implements
                     ['10:30-11:00'], ['11:00-11:30'], ['11:30-12:00'], ['12:00-12:30']
                 ];
                 $event->sheet->getDelegate()->fromArray($arrayData, NULL, 'A4');
+
+                $rowArray2 = ['Value1', 'Value2', 'Value3', 'Value4'];
+                $columnArray = array_chunk($rowArray2, 1);
+                $event->sheet->getDelegate()->fromArray(
+                    $columnArray,   // The data to set
+                    NULL,           // Array values with this value will not be set
+                    'D13'            // Top left coordinate of the worksheet range where
+                );
             },
 
             AfterSheet::class    => function (AfterSheet $event) {
@@ -110,6 +118,14 @@ class UsersExport implements
                 $event->sheet->getDelegate()->setCellValue(
                     'H10',
                     '=IF(A3, CONCATENATE(A1, " ", A2), CONCATENATE(A2, " ", A1))'
+                );
+
+                $rowArray = ['Value1', 'Value2', 'Value3', 'Value4'];
+                $event->sheet->getDelegate()->fromArray(
+                    $rowArray,   // The data to set
+                    NULL,        // Array values with this value will not be set
+                    'A1'         // Top left coordinate of the worksheet range where
+                    //    we want to set these values (default is A1)
                 );
             },
         ];
