@@ -19,7 +19,7 @@
                 <input type="file" name="file" class="form-control">
                 <br>
                 <button class="btn btn-success">Import User Data</button>
-                <a class="btn btn-warning" href="export">Export User Data</a>
+                <a class="btn btn-warning" href="{{ route('exportLibrary') }}">Export User Data</a>
             </form>
         </div>
     </div>
